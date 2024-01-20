@@ -43,7 +43,7 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findById(cardId)
     .then((card) => {
-      Card.deleteOne({ _id: card._id, owner: req.user._id })
+      Card.deleteOne({ _id: card._id })
         .then((result) => {
           if (!result) {
             res
