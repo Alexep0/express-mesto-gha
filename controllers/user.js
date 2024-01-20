@@ -17,8 +17,8 @@ module.exports.getAllUsers = (req, res) => {
     });
 };
 
-module.exports.getUserById = (req, res) => {
-  User.findById(req.user._id)
+module.exports.getUserById = (req, res, requiredData) => {
+  User.findById(requiredData)
     .then((user) => {
       if (!user) {
         res
