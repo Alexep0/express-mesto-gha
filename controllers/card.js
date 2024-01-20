@@ -41,15 +41,18 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
-  Card.findByIdAndDelete(cardId)
+  Card.findById(cardId)
     .then((card) => {
-      if (!card) {
-        res
-          .status(ERR_NOT_FOUND)
-          .send({ message: 'Карточка не найдена' });
-        return;
-      }
-      res.status(200).send({ data: card });
+      Card.deleteOne({ _id: card._id, owner: req.user._id })
+        .then((result) => {
+          if (!result) {
+            res
+              .status(ERR_NOT_FOUND)
+              .send({ message: 'Карточка не найдена' });
+            return;
+          }
+          res.status(200).send({ data: result });
+        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
