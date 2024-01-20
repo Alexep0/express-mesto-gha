@@ -1,17 +1,18 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-var-requires
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const express = require('express');
-// eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-var-requires
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   req.user = {
@@ -21,6 +22,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
 });

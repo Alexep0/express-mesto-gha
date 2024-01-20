@@ -16,9 +16,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "nodemon index.js",
-    "start2": "node app.js",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "eslintConfig": {
     "extends": [

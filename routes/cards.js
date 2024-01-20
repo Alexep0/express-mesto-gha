@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const router = require('express').Router();
+
 const {
   getAllCards,
   createCard,
   deleteCard,
   likeCard,
   dislikeCard,
-} = require('../controllers/user');
+} = require('../controllers/card');
 
 router.get('/cards', getAllCards);
 router.post('/cards', createCard);

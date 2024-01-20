@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const router = require('express').Router();
+
 const {
   getAllUsers,
   getUserById,

@@ -1,41 +1,105 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-var-requires
 const Card = require('../models/card');
 
-module.exports.getAllCards = (req, res, next) => {
+const {
+  ERR_BAD_REQUEST,
+  ERR_DEFAULT,
+  ERR_NOT_FOUND,
+} = require('../errors/errors');
+
+module.exports.getAllCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send(cards))
-    .catch(next);
-};
-
-module.exports.createCard = (req, res, next) => {
-  const { name, link } = req.body;
-  Card.create({ name, link })
-    .then((card) => res.send({ data: card }))
-    .catch(next);
-};
-
-module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.card._id)
-    .then((card) => {
-      Card.deleteOne({ _id: card._id, owner: req.user._id });
+    .then((cards) => {
+      res.status(200).send(cards);
     })
-    .catch(next);
+    .catch(() => {
+      res.status(ERR_DEFAULT).send({ message: 'Что-то пошло не так' });
+    });
 };
 
-module.exports.likeCard = (req, res, next) => {
+module.exports.createCard = (req, res) => {
+  const { name, link } = req.body;
+  const owner = req.user._id;
+
+  Card.create({ name, link, owner })
+    .then((card) => res.send({
+      name: card.name,
+      link: card.link,
+      owner: card.owner,
+      _id: card._id,
+    }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERR_BAD_REQUEST).send({
+          message: 'Данные введены некорректно',
+        });
+      }
+      return res.status(ERR_DEFAULT).send({ message: 'Что-то пошло не так' });
+    });
+};
+
+module.exports.deleteCard = (req, res) => {
+  Card.findByIdAndDelete(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(ERR_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        return;
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERR_BAD_REQUEST).send({
+          message: 'Данные введены некорректно',
+        });
+      }
+      return res.status(ERR_DEFAULT).send({ message: 'Что-то пошло не так' });
+    });
+};
+
+module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .catch(next);
+    .then((card) => {
+      if (!card) {
+        res.status(ERR_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        return;
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERR_BAD_REQUEST).send({
+          message: 'Данные введены некорректно',
+        });
+      }
+      return res.status(ERR_DEFAULT).send({ message: 'Что-то пошло не так' });
+    });
 };
 
-module.exports.dislikeCard = (req, res, next) => {
+module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .catch(next);
+    .then((card) => {
+      if (!card) {
+        res.status(ERR_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        return;
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERR_BAD_REQUEST).send({
+          message: 'Данные введены некорректно',
+        });
+      }
+      return res.status(ERR_DEFAULT).send({ message: 'Что-то пошло не так' });
+    });
 };
