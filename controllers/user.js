@@ -18,15 +18,16 @@ module.exports.getAllUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findOne({ _id: req.user._id })
+  const userId = req.params.userId;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         res
           .status(ERR_NOT_FOUND)
           .send({ message: 'Запрашиваемый пользователь не найден' });
-      } else {
-        res.status(200).send({ data: user });
+        return;
       }
+      res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
