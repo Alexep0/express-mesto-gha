@@ -14,13 +14,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   req.user = {
     _id: '65a820a9017906e20812b20f',
   };
 
   next();
-});
+}); */
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
