@@ -44,10 +44,12 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
-        res.status(ERR_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        res
+          .status(ERR_NOT_FOUND)
+          .send({ message: 'Карточка не найдена' });
         return;
       }
-      res.status(200).send(card);
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
