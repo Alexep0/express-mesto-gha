@@ -40,7 +40,8 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.card._id)
+  const { cardId } = req.params;
+  Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
         res.status(ERR_NOT_FOUND).send({ message: 'Карточка не найдена' });
