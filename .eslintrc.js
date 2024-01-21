@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
     'airbnb-base',
   ],
   overrides: [
@@ -29,7 +28,6 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
-    'react',
   ],
   rules: {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
