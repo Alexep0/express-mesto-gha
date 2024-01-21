@@ -41,17 +41,19 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+
   Card.findById(cardId)
     .then((card) => {
-      Card.deleteOne({ _id: card._id })
-        .then((result) => {
-          if (!result) {
-            res
-              .status(ERR_NOT_FOUND)
-              .send({ message: 'Карточка не найдена' });
-            return;
-          }
-          res.status(200).send({ data: result });
+      if (!card) {
+        res
+          .status(ERR_NOT_FOUND)
+          .send({ message: 'Карточка не найдена' });
+        return;
+      }
+
+      card.deleteOne()
+        .then(() => {
+          res.status(200).send({ data: card });
         });
     })
     .catch((err) => {
