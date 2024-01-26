@@ -12,7 +12,7 @@ module.exports.auth = (req, res, next) => {
   let token = req.header('Authorization');
 
   if (!token) {
-    token = req.cookies.jwt;
+    token = req?.cookies?.jwt;
   } else if (token.split(' ')[0] === 'Bearer') {
     token = token.split(' ')[1];
   }
