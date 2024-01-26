@@ -5,8 +5,7 @@ const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcryptjs');
 const UnauthorizedErr = require('../errors/UnauthorizedErr');
-
-const linkValidate = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/im;
+const { linkValidate } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {

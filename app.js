@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -7,6 +8,8 @@ const bodyParser = require('body-parser');
 const { ERR_NOT_FOUND } = require('./errors/errors');
 const { login, createUser } = require('./controllers/user');
 const { auth } = require('./middlewares/auth');
+const { celebrate, Joi } = require('celebrate');
+const { linkValidate } = require('./utils/constants');
 
 const errorHandler = require('./middlewares/error');
 
@@ -19,8 +22,21 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(linkValidate),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 
 app.use(auth);
 
