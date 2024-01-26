@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-var-requires
 const mongoose = require('mongoose');
+const { linkValidate } = require('../utils/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,6 +13,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: { validator: (v) => linkValidate.test(v) },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

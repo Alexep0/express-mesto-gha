@@ -3,6 +3,8 @@
 const Card = require('../models/card');
 const BadRequestErr = require('../errors/BadRequestErr');
 const NotFoundErr = require('../errors/NotFoundErr');
+const ForbiddenErr = require('../errors/ForbiddenErr');
+const InternalErr = require('../errors/InternalErr');
 
 module.exports.getAllCards = (req, res, next) => {
   Card.find({})
@@ -45,9 +47,12 @@ module.exports.deleteCard = (req, res, next) => {
         card.deleteOne()
           .then(() => {
             res.status(200).send({ data: card });
+          })
+          .catch(() => {
+            next(new InternalErr());
           });
       } else {
-        res.status(403).send({ data: 'Недостаточно прав' });
+        next(new ForbiddenErr('Недостаточно прав'));
       }
     })
     .catch((err) => {
