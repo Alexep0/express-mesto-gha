@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const { ERR_NOT_FOUND } = require('./errors/errors');
 const { login, createUser } = require('./controllers/user');
 const { auth } = require('./middlewares/auth');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const { linkValidate } = require('./utils/constants');
 
 const errorHandler = require('./middlewares/error');
@@ -28,6 +28,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -38,6 +39,7 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+
 app.use(auth);
 
 app.use('/', require('./routes/users'));
@@ -47,6 +49,7 @@ app.use((req, res) => {
   res.status(ERR_NOT_FOUND).send({ message: 'Страница не найдена' });
 });
 
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
