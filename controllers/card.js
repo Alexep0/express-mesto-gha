@@ -47,8 +47,8 @@ module.exports.deleteCard = (req, res, next) => {
           .then(() => {
             res.status(200).send({ data: card });
           })
-          .catch(() => {
-            next(new Error());
+          .catch((err) => {
+            next(err);
           });
       } else {
         next(new ForbiddenErr('Недостаточно прав'));
