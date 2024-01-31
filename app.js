@@ -3,12 +3,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 const { login, createUser } = require('./controllers/user');
 const { auth } = require('./middlewares/auth');
 const { celebrate, Joi, errors } = require('celebrate');
 const { linkValidate } = require('./utils/constants');
 const NotFoundErr = require('./errors/NotFoundErr');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 require('dotenv').config();
 
 const errorHandler = require('./middlewares/error');
@@ -18,6 +21,10 @@ mongoose.connect('mongodb://127.0.0.1/mestodb');
 const { PORT = 3000 } = process.env;
 
 const app = express();
+
+app.use(cors({
+  origin: '*',
+}));
 
 app.use(express.json());
 

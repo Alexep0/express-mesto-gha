@@ -18,7 +18,6 @@ module.exports.auth = (req, res, next) => {
     return next(new UnauthorizedErr('Отказ в доступе'));
   }
 
-
   let payload;
   try {
     const secret = process.env.JWT_SECRET || 'some-secret-key';

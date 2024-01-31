@@ -5,7 +5,6 @@ const BadRequestErr = require('../errors/BadRequestErr');
 const ConflictErr = require('../errors/ConflictErr');
 const NotFoundErr = require('../errors/NotFoundErr');
 
-
 const User = require('../models/user');
 
 module.exports.getAllUsers = (req, res, next) => {
